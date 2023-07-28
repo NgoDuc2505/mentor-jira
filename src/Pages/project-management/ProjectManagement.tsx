@@ -12,11 +12,14 @@ import React from 'react';
 import './projectManagement.scss'
 //componets
 import EditProjectModal from '../../components/edit-project-modal/EditProjectModal';
+import ShowMembers from '../../components/show-members/ShowMembers';
+
 
 function ProjectManagement() {
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const handleOpen = () => setOpenEditModal(true);
     const handleClose = () => setOpenEditModal(false);
+    const [openMembers,setOpenMembers] = React.useState(false);
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 50 },
         {
@@ -60,10 +63,14 @@ function ProjectManagement() {
             width: 250,
             renderCell: (params) => {
                 console.log(params.row)
+                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>)=>{
+                    e.stopPropagation()
+                    setOpenMembers(true)
+                }
                 return (
                     <>
                         <div className="members-group">
-                            <Avatar sx={{ height: '3rem', width: '3rem' }}>H</Avatar>
+                            <Avatar sx={{ height: '3rem', width: '3rem' }} onMouseOver={hanldeTooltip}>H</Avatar>
                         </div>
                         <Chip label="+" variant="outlined" sx={{ height: '2.5rem', marginLeft: '2px', fontSize: '1.4rem' }} />
                     </>
@@ -153,6 +160,15 @@ function ProjectManagement() {
                         aria-describedby="modal-modal-description"
                     >
                         <EditProjectModal/>
+                    </Modal>
+                    <Modal
+                        open={openMembers}
+                        onClose={()=>{setOpenMembers(false)}}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        hideBackdrop = {false}
+                    >
+                        <ShowMembers/>
                     </Modal>
                 </Box>
             </div>

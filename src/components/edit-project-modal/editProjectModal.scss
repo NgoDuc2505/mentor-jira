@@ -1,0 +1,50 @@
+.edit-project-modal{
+    width: 90%;
+    height: 90%;
+    background-color: #fff;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    padding: 3rem 4rem;
+    border-radius: 5px;
+    .edit-title-project{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+        .edit-title-project-item{
+            width: 25%;
+            input,select{
+                width: 100%;
+                height: 3rem;
+                padding-left: 1rem;
+            }
+        }
+        h4{
+            margin-bottom: 1rem;
+        }
+    }
+    .edit-project-desc{
+        width: 100%;
+        .ck-content.ck-editor__editable{
+            height: 350px;
+        }
+        h4{
+            margin-bottom: 5px; 
+        }
+    }
+    h3{
+        margin-bottom: 5px;
+    }
+    .btn-edit-project-group{
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        gap: 2rem;
+        margin-top: 1rem;
+        button{
+            font-size: 1.4rem;
+        }
+    }
+}

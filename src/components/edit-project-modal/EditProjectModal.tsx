@@ -4,6 +4,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 //mui ui
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+//scss
+import './editProjectModal.scss'
 
 function EditProjectModal() {
     return (
@@ -32,9 +34,8 @@ function EditProjectModal() {
                 <Typography variant='h4'>Project Description</Typography>
                 <CKEditor
                     editor={ClassicEditor}
-                    data="<p>Hello from CKEditor 5!</p>"
+                    data="..."
                     onReady={editor => {
-                        // You can store the "editor" and use when it is needed.
                         console.log('Editor is ready to use!', editor);
                     }}
                     onChange={(event, editor) => {
@@ -50,8 +51,8 @@ function EditProjectModal() {
                 />
             </div>
             <div className="btn-edit-project-group">
-            <Button variant='outlined'>Cancel</Button>
-            <Button variant='outlined'>Cancel</Button>
+                <Button variant='contained' color='error'>Cancel</Button>
+                <Button variant='contained' color='primary'>Submit</Button>
             </div>
         </div>
     )
