@@ -1,0 +1,45 @@
+.side-bar-sub{
+    width: 20%;
+    height: 100%;
+    background-color: #f4f5f7;
+    padding-top: 2rem;
+    .avatar-bar-sub{
+        display: flex;
+        width: 90%;
+        margin: 0 auto;
+        .info-ava-bar{
+            padding-left: 1rem;
+            button{
+                padding: 0;
+                color: black;
+            }
+            p{
+                font-weight: 600;
+                font-size: 1.6rem;
+            }
+        }
+        .mui-ava{
+            margin-left: 2.8rem;
+            margin-bottom: 2rem;
+        }
+    }
+    .group-btn-bar-sub{
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        button{
+            font-size: 1.6rem;
+            color: black;
+            justify-content: flex-start;
+            margin-left: 2rem;
+            i{
+                margin-right: 1rem;
+            }
+            a{
+                color: black;
+                text-decoration: none;
+            }
+        }
+    }
+}
