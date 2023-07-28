@@ -1,0 +1,15 @@
+.project-management{
+    padding: 5rem 0 5rem 5rem;
+    width: 65%;
+    .proj-management-title{
+        margin-bottom: 1rem;
+        .btn-proj-management-group{
+            display: flex;
+            gap: 1rem;
+            button{
+                color: black;
+                border: 1px black solid;
+            }
+        }
+    }
+}
