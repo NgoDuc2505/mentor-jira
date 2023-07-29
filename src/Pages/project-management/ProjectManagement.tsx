@@ -13,13 +13,20 @@ import './projectManagement.scss'
 //componets
 import EditProjectModal from '../../components/edit-project-modal/EditProjectModal';
 import ShowMembers from '../../components/show-members/ShowMembers';
+import AddMemberPopup from '../../components/add-member-popup/AddMemberPopup';
+//react
+import { useNavigate } from 'react-router-dom';
 
 
 function ProjectManagement() {
+    const navigate = useNavigate()
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const handleOpen = () => setOpenEditModal(true);
     const handleClose = () => setOpenEditModal(false);
-    const [openMembers,setOpenMembers] = React.useState(false);
+    const [openMembers, setOpenMembers] = React.useState(false);
+    const [openAddMember, setAddMember] = React.useState(false);
+
+
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 50 },
         {
@@ -52,7 +59,8 @@ function ProjectManagement() {
             align: 'left',
             renderCell: (params) => {
                 console.log(params)
-                return <Chip label="Tom" variant="outlined" sx={{ color: '#72d772', borderColor: '#72d772', fontWeight: '600', borderRadius: '5px' }} />
+
+                return (<Chip label="Tom" variant="outlined" sx={{ color: '#72d772', borderColor: '#72d772', fontWeight: '600', borderRadius: '5px' }} />)
             }
         },
         {
@@ -63,16 +71,23 @@ function ProjectManagement() {
             width: 250,
             renderCell: (params) => {
                 console.log(params.row)
-                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>)=>{
+                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
                     e.stopPropagation()
                     setOpenMembers(true)
+                }
+                const handleOpenAddmem = (e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    setAddMember(true)
                 }
                 return (
                     <>
                         <div className="members-group">
                             <Avatar sx={{ height: '3rem', width: '3rem' }} onMouseOver={hanldeTooltip}>H</Avatar>
                         </div>
-                        <Chip label="+" variant="outlined" sx={{ height: '2.5rem', marginLeft: '2px', fontSize: '1.4rem' }} />
+                        <div className='chip-onclick' onClick={handleOpenAddmem}>
+                            <Chip label="+" variant="outlined" sx={{ height: '2.5rem', marginLeft: '2px', fontSize: '1.4rem' }} />
+                        </div>
+
                     </>
                 )
             }
@@ -98,6 +113,7 @@ function ProjectManagement() {
                 const handleNavigateToDetail = (e: React.MouseEvent) => {
                     e.stopPropagation()
                     console.log(params)
+                    navigate(`/detail-project/4`)
                 }
                 return (
                     <div className="btn-group-table">
@@ -159,16 +175,25 @@ function ProjectManagement() {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <EditProjectModal/>
+                        <EditProjectModal />
                     </Modal>
                     <Modal
                         open={openMembers}
-                        onClose={()=>{setOpenMembers(false)}}
+                        onClose={() => { setOpenMembers(false) }}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
-                        hideBackdrop = {false}
+                        hideBackdrop={false}
                     >
-                        <ShowMembers/>
+                        <ShowMembers />
+                    </Modal>
+                    <Modal
+                        open={openAddMember}
+                        onClose={() => { setAddMember(false) }}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        hideBackdrop={false}
+                    >
+                        <AddMemberPopup/>
                     </Modal>
                 </Box>
             </div>

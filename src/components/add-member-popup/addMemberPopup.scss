@@ -1,0 +1,36 @@
+.add-member-popup{
+    width: 12%;
+    background-color: #fff;
+    padding-top: 1rem;
+    border-radius: 5px;
+    overflow: hidden;
+    position: fixed;
+    top: 44%;
+    left: 80%;
+    transform: translate(-50%,-50%);
+    h4{
+        margin-left: 1rem;
+    }
+    .add-member-content{
+        width: 100%;
+        padding: 1rem;
+        input{
+            width: 95%;
+            margin: auto;
+        }
+        .list-range-member{
+            max-height: 200px;
+            overflow-y: auto;
+            p{
+                font-size: 1.4rem;
+                font-weight: 500;
+                line-height: 2rem;
+            }
+        }
+        button{
+            width: 20px;
+            min-width: unset;
+            margin-left: 80%;
+        }
+    }
+}
