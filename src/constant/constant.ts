@@ -17,3 +17,10 @@ export interface IValues extends IValuesLogin {
     phoneNumber: string
 }
 
+export interface IProfile {
+    avatar: string,
+    email:string,
+    id: number,
+    name: string,
+    phoneNumber: string
+}
