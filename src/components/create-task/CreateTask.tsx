@@ -214,7 +214,7 @@ function CreateTask() {
                     </div>
                     <div className="task-slider">
                         <Typography variant='h4'>Time tracking</Typography>
-                        <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
+                        <Slider defaultValue={50} max={60} aria-label="Default" valueLabelDisplay="auto" />
                         <div className="slider-status">
                             <Typography variant='h4'>0h logged</Typography>
                             <Typography variant='h4'>0h remaining</Typography>

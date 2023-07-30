@@ -9,10 +9,15 @@ import React from 'react';
 import './detailProject.scss'
 //components
 import CreateTask from '../../components/create-task/CreateTask';
+import EditTask from '../../components/edit-task/EditTask';
 
 
 function DetailProject() {
   const [openModal, setOpenModal] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const handleOpenEditTask = () => {
+    setOpenEdit(true)
+  }
   return (
     <div className="detail-project">
       <div className="header-detail-project">
@@ -31,13 +36,13 @@ function DetailProject() {
         </div>
         <Typography variant='h6'>Only my issue</Typography>
         <Typography variant='h6'>Recently uploaded</Typography>
-        <Button variant='contained' color='info' onClick={()=>{setOpenModal(true)}}>New Task</Button>
+        <Button variant='contained' color='info' onClick={() => { setOpenModal(true) }}>New Task</Button>
       </div>
       <div className="task-tracking">
         <div className="track-item">
           <Typography variant='h6' sx={{ marginLeft: '1rem' }}>BACKLOG</Typography>
           <div className="track-task-list">
-            <div className="task-item-detail">
+            <div className="task-item-detail" onClick={handleOpenEditTask}>
               <Typography variant='h6'>Task 01</Typography>
               <div className="task-status">
                 <Typography variant='h6' color={'red'}>High</Typography>
@@ -321,11 +326,18 @@ function DetailProject() {
       </div>
       <Modal
         open={openModal}
-        onClose={()=>{setOpenModal(false)}}
+        onClose={() => { setOpenModal(false) }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <CreateTask/>
+        <CreateTask />
+      </Modal>
+      <Modal
+        open={openEdit}
+        onClose={() => { setOpenEdit(false) }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+          <EditTask/>
       </Modal>
     </div>
   )

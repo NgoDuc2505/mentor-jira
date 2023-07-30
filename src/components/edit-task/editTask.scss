@@ -1,0 +1,133 @@
+.edit-task{
+    background-color: #fff;
+    width: 90%;
+    height: 95%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    padding: 3rem;
+    transform:  translate(-50%,-50%);
+    display: flex;
+    gap: 3rem;
+    .mui-select-custom-edit-task{
+        height: 3rem;
+        margin: 0;
+    }
+    .edit-task-left{
+        width: 60%;
+        .edit-task-left-header{
+            display: flex;
+            align-items: center;
+            i{
+                color: green;
+            }
+            h5{
+                margin-left: 2rem;
+            }
+        }
+
+        .edit-task-left-content-title{
+            margin-top: 1rem;
+            h5{
+                margin-top: 2rem;
+            }
+        }
+
+        .edit-task-left-content-comment{
+            .comment-list-of-task{
+                .comment-task-area,
+                .task-comment-show{
+                    display: flex;
+                    gap: 2rem;
+                    margin-top: 2rem;
+                }
+
+                .comment-task-area{
+                    .task-comment-input{
+                        width: 100%;
+                        input{
+                            width: 100%;
+                            height: 4rem;
+                            padding-left: 1rem;
+                            font-style: 1.4rem;
+                        }
+                    }
+                }
+
+                .task-comment-show{
+                    .task-comment-detail{
+                        h5{
+                            margin: 1rem 0;
+                        }
+                    }
+                }
+            }
+
+            .action-comment-task{
+                button{
+                    color: gray;
+                }
+            }
+        }
+    }
+
+    .edit-task-right{
+        width: 40%;
+        .edit-task-right-item{
+            width: 100%;
+            margin-top: 2rem;
+            input{
+                width: 100%;
+                height: 3rem;
+                padding-left: 1rem;
+                font-size: 1.4rem;
+            }
+            h4{
+                margin-bottom: 1rem;
+            }
+        }
+
+        .edit-task-component-assign{
+            .edit-task-component-assign-detail{
+                display: flex;
+                align-items: center;
+                .ava-edit-task-component-assign{
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    width: 50%;
+                    overflow: hidden;
+                }
+            
+            }
+        }
+
+        .edit-task-right-time-tracking{
+            .edit-task-right-time-tracking-input{
+                display: flex;
+                justify-content: space-between;
+                input{
+                    width: 20%;
+                }
+            }
+            .edit-task-right-footer{
+                border-top: 1px solid #000;
+                margin-top: 2rem;
+                padding: 1rem 0;
+                h5{
+                    margin-top: 0.5rem;
+                }
+            }
+        }
+
+        .edit-task-right-header{
+            button{
+                margin: 0 2rem;
+                font-size: 1.4rem;
+                i{
+                    margin-right: 1rem;
+                }
+            }
+        }
+    }
+}
