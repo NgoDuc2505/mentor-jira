@@ -1,5 +1,5 @@
 //react
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 // import { useState } from 'react';
 //Mui ui
 import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
@@ -9,14 +9,16 @@ import '../Login/login.scss'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 //const
-import { regex, IValues } from '../../constant/constant'
+import { regex, IValues, CYBER_TOKEN, BASE_URL } from '../../constant/constant'
 //swal
 import swal from 'sweetalert';
 //services
 // import { axiosInterceptorWithCybertoken } from '../../services/services'
+import axios from 'axios';
+
 
 function Register() {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -32,17 +34,16 @@ function Register() {
     }),
     onSubmit: async (values: IValues) => {
       try {
-
-      
-          const newValue = {
-            ...values
-          }
-          console.log(newValue)
-          // await axiosInterceptorWithCybertoken.post('/api/auth/signup', newValue)
-          // swal("Thành công, tài khoản đã được tạo!", {
-          //   icon: "success",
-          // });
-          // navigate('/auth/login')
+          await axios({
+            method:'post',
+            url:`${BASE_URL}/api/Users/signup`,
+            headers: {
+              TokenCybersoft: CYBER_TOKEN
+            },
+            data: values
+          })
+          swal("Đã đăng ký thành công!", {icon: "success"})
+          navigate('/auth/login')
         }
        catch (error) {
         console.log(error)
@@ -63,7 +64,7 @@ function Register() {
       <form action="" className='login-form' onSubmit={formik.handleSubmit}>
         <FormControl variant='standard' className='mui-form-control' margin='dense' error={formik.errors.passWord ? true : false}>
           <InputLabel htmlFor="my-input-password">Mật khẩu</InputLabel>
-          <Input id="my-input-password" aria-describedby="my-helper-text" {...formik.getFieldProps('password')} />
+          <Input id="my-input-password" aria-describedby="my-helper-text" {...formik.getFieldProps('passWord')} />
           {formik.touched.passWord && formik.errors.passWord ? <FormHelperText id="my-helper-text">{formik.errors.passWord}</FormHelperText> : <></>}
         </FormControl>
         <FormControl variant='standard' className='mui-form-control' margin='dense' error={formik.errors.name ? true : false}>
@@ -78,7 +79,7 @@ function Register() {
         </FormControl>
         <FormControl variant='standard' className='mui-form-control' margin='dense' error={formik.errors.phoneNumber ? true : false}>
           <InputLabel htmlFor="my-input-phone">Số điện thoại</InputLabel>
-          <Input id="my-input-phone" aria-describedby="my-helper-text" {...formik.getFieldProps('phone')} />
+          <Input id="my-input-phone" aria-describedby="my-helper-text" {...formik.getFieldProps('phoneNumber')} />
           {formik.touched.phoneNumber && formik.errors.phoneNumber ? <FormHelperText id="my-helper-text">{formik.errors.phoneNumber}</FormHelperText> : <></>}
         </FormControl>
         <div className="form-button-group">
