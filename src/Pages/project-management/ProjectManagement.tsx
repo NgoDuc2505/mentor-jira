@@ -16,7 +16,7 @@ import AddMemberPopup from '../../components/add-member-popup/AddMemberPopup';
 //react
 import { useNavigate } from 'react-router-dom';
 //services
-import { getListProject } from '../../redux/project-data/projectData';
+import { getListProject, getCategory } from '../../redux/project-data/projectData';
 //react
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,6 +36,7 @@ function ProjectManagement() {
     const reducerListProduct = useSelector((state: RootState) => state.projectSlice.listProject)
     useEffect(() => {
         dispatch(getListProject())
+        dispatch(getCategory())
     }, [])
 
     const columns: GridColDef[] = [
@@ -47,7 +48,6 @@ function ProjectManagement() {
             align: 'left',
             headerAlign: 'left',
             renderCell: (params) => {
-                // console.log(params)
                 return <Typography variant="h5" sx={{ color: '#0288d1' }}>
                     {params.row.projectName}
                 </Typography>
@@ -123,7 +123,7 @@ function ProjectManagement() {
             renderCell: (params) => {
                 const handleEdit = (e: React.MouseEvent) => {
                     e.stopPropagation()
-                    // console.log(params)
+                    console.log(params)
                     handleOpen()
                 }
                 const handleDelete = (e: React.MouseEvent) => {

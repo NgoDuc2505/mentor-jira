@@ -30,3 +30,13 @@ export interface IMembers {
     name: string,
     avatar: string
 }
+
+export interface ICategory {
+    id: number,
+    projectCategoryName: string
+}
+
+export interface ICreator {
+    id: number,
+    name: string,
+}
