@@ -8,8 +8,6 @@ import * as Yup from 'yup';
 import { regex, IValuesLogin, ACCESS_TOKEN, IProfile } from '../../constant/constant'
 import Button from '@mui/material/Button';
 import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
-//utils
-// import { setLocal } from '../../utils/utils'
 //swal
 import swal from 'sweetalert';
 //utils

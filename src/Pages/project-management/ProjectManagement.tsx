@@ -7,7 +7,6 @@ import Modal from '@mui/material/Modal';
 //mui data grid
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import React from 'react';
 //scss
 import './projectManagement.scss'
 //componets
@@ -16,19 +15,31 @@ import ShowMembers from '../../components/show-members/ShowMembers';
 import AddMemberPopup from '../../components/add-member-popup/AddMemberPopup';
 //react
 import { useNavigate } from 'react-router-dom';
-
+//services
+import { getListProject } from '../../redux/project-data/projectData';
+//react
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store'
+//const
+import { IMembers } from '../../constant/constant'
 
 function ProjectManagement() {
+    const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
     const [openEditModal, setOpenEditModal] = React.useState(false);
     const handleOpen = () => setOpenEditModal(true);
     const handleClose = () => setOpenEditModal(false);
     const [openMembers, setOpenMembers] = React.useState(false);
     const [openAddMember, setAddMember] = React.useState(false);
-
+    const [listMember,setListMember] = React.useState<IMembers[]>([])
+    const reducerListProduct = useSelector((state: RootState) => state.projectSlice.listProject)
+    useEffect(() => {
+        dispatch(getListProject())
+    }, [])
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', width: 50 },
+        { field: 'id', headerName: 'ID', width: 70 },
         {
             field: 'projectName',
             headerName: 'Project Name',
@@ -36,9 +47,9 @@ function ProjectManagement() {
             align: 'left',
             headerAlign: 'left',
             renderCell: (params) => {
-                console.log(params)
+                // console.log(params)
                 return <Typography variant="h5" sx={{ color: '#0288d1' }}>
-                    Project Management
+                    {params.row.projectName}
                 </Typography>
             }
 
@@ -58,9 +69,7 @@ function ProjectManagement() {
             headerAlign: 'left',
             align: 'left',
             renderCell: (params) => {
-                console.log(params)
-
-                return (<Chip label="Tom" variant="outlined" sx={{ color: '#72d772', borderColor: '#72d772', fontWeight: '600', borderRadius: '5px' }} />)
+                return (<Chip label={`${params.row.creator.name}`} variant="outlined" sx={{ color: '#72d772', borderColor: '#72d772', fontWeight: '600', borderRadius: '5px' }} />)
             }
         },
         {
@@ -70,10 +79,10 @@ function ProjectManagement() {
             align: 'left',
             width: 250,
             renderCell: (params) => {
-                console.log(params.row)
-                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>,listMember: IMembers[]) => {
                     e.stopPropagation()
                     setOpenMembers(true)
+                    setListMember(listMember)
                 }
                 const handleOpenAddmem = (e: React.MouseEvent) => {
                     e.stopPropagation()
@@ -82,12 +91,23 @@ function ProjectManagement() {
                 return (
                     <>
                         <div className="members-group">
-                            <Avatar sx={{ height: '3rem', width: '3rem' }} onMouseOver={hanldeTooltip}>H</Avatar>
+                            {params.row.members.map((mem: IMembers, index: number) => {
+                                if (index <= 4) {
+                                    return (<Avatar key={mem.userId} sx={{ height: '3rem', width: '3rem' }} onMouseOver={(e)=>{hanldeTooltip(e,params.row.members)}} src={mem.avatar}></Avatar>)
+                                }
+                            })}
                         </div>
                         <div className='chip-onclick' onClick={handleOpenAddmem}>
                             <Chip label="+" variant="outlined" sx={{ height: '2.5rem', marginLeft: '2px', fontSize: '1.4rem' }} />
                         </div>
-
+                        <Modal
+                            open={openMembers}
+                            onClose={() => { setOpenMembers(false) }}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <ShowMembers members={listMember} />
+                        </Modal>
                     </>
                 )
             }
@@ -103,16 +123,16 @@ function ProjectManagement() {
             renderCell: (params) => {
                 const handleEdit = (e: React.MouseEvent) => {
                     e.stopPropagation()
-                    console.log(params)
+                    // console.log(params)
                     handleOpen()
                 }
                 const handleDelete = (e: React.MouseEvent) => {
                     e.stopPropagation()
-                    console.log(params)
+                    // console.log(params)
                 }
                 const handleNavigateToDetail = (e: React.MouseEvent) => {
                     e.stopPropagation()
-                    console.log(params)
+                    // console.log(params)
                     navigate(`/detail-project/4`)
                 }
                 return (
@@ -140,6 +160,8 @@ function ProjectManagement() {
         { id: 92, projectName: 'Roxie', categoryName: 'Harvey', creator: 'John' },
         { id: 93, projectName: 'Roxie', categoryName: 'Harvey', creator: 'John' }
     ];
+
+    const dataRender = reducerListProduct ? reducerListProduct : rows
     return (
         <div className="project-management">
             <div className="proj-management-title">
@@ -156,7 +178,7 @@ function ProjectManagement() {
                 <Box sx={{ height: ' 528px', width: '100%' }}>
                     <DataGrid
                         sx={{ fontSize: '1.4rem' }}
-                        rows={rows}
+                        rows={dataRender}
                         columns={columns}
                         initialState={{
                             pagination: {
@@ -178,22 +200,13 @@ function ProjectManagement() {
                         <EditProjectModal />
                     </Modal>
                     <Modal
-                        open={openMembers}
-                        onClose={() => { setOpenMembers(false) }}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                        hideBackdrop={false}
-                    >
-                        <ShowMembers />
-                    </Modal>
-                    <Modal
                         open={openAddMember}
                         onClose={() => { setAddMember(false) }}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                         hideBackdrop={false}
                     >
-                        <AddMemberPopup/>
+                        <AddMemberPopup />
                     </Modal>
                 </Box>
             </div>

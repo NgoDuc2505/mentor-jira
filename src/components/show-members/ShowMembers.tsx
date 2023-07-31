@@ -6,10 +6,28 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 //mui ui
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
+//const
+import {IMembers} from '../../constant/constant'
 
-function ShowMembers() {
+interface IProps {
+    members: IMembers[]
+}
+
+interface IMembersList {
+    id: number,
+    name: string,
+    avatar: string
+}
+
+function ShowMembers({members}:IProps) {
+    const memberList:IMembersList[] = []
+    members.map((member)=>{
+        const {userId, avatar, name} = member
+        const memChange = {id : userId, avatar, name}
+        memberList.push(memChange)
+    })
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', maxWidth: 50 },
+        { field: 'id', headerName: 'id', maxWidth: 50 },
         {
             field: 'avatar',
             headerName: 'Avatar',
@@ -17,7 +35,7 @@ function ShowMembers() {
             headerAlign: 'left',
             align: 'left',
             renderCell: (params)=>{
-                console.log(params)
+                // console.log(params)
                 return <Avatar sx={{width:'30px', height:'30px'}}>h</Avatar>
             }
         },
@@ -35,7 +53,7 @@ function ShowMembers() {
             align: 'left',
             width:60 ,
             renderCell: (params) => {
-                console.log(params.row)
+                // console.log(params.row)
 
                 return (
                     <Button variant='contained' color='error' sx={{width:'2rem', minWidth:'unset'}}>X</Button>
@@ -55,11 +73,12 @@ function ShowMembers() {
         { id: 8, avatar: 'Frances', name: 'Rossini'},
         { id: 9, avatar: 'Roxie', name: 'Harvey'},
     ];
+    const dataResp = members ? memberList : rows
     return (
         <div className='show-members'>
             <Box sx={{ height: 200, width: '100%' }}>
                 <DataGrid
-                    rows={rows}
+                    rows={memberList}
                     columns={columns}
                     disableRowSelectionOnClick
                     hideFooter = {true}
