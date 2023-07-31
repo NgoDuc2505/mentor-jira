@@ -35,7 +35,7 @@ function ShowMembers({members}:IProps) {
             headerAlign: 'left',
             align: 'left',
             renderCell: (params)=>{
-                // console.log(params)
+                console.log(params)
                 return <Avatar sx={{width:'30px', height:'30px'}}>h</Avatar>
             }
         },
@@ -53,8 +53,7 @@ function ShowMembers({members}:IProps) {
             align: 'left',
             width:60 ,
             renderCell: (params) => {
-                // console.log(params.row)
-
+                console.log(params.row)
                 return (
                     <Button variant='contained' color='error' sx={{width:'2rem', minWidth:'unset'}}>X</Button>
                 )
@@ -78,7 +77,7 @@ function ShowMembers({members}:IProps) {
         <div className='show-members'>
             <Box sx={{ height: 200, width: '100%' }}>
                 <DataGrid
-                    rows={memberList}
+                    rows={dataResp}
                     columns={columns}
                     disableRowSelectionOnClick
                     hideFooter = {true}

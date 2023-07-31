@@ -2,17 +2,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 //services
 import { axiosWithCyberToken } from '../../services/services';
+//const 
+import { ICategory, IMembers, ICreator } from '../../constant/constant'
 
-
-interface IMembers {
-    userId: number,
-    name: string,
-    avatar: string
-}
-interface ICreator {
-    id: number,
-    name: string,
-}
 
 interface IInitSate {
     listProject: {
@@ -25,7 +17,8 @@ interface IInitSate {
         categoryName: string;
         alias: string;
         deleted: boolean;
-    }[]
+    }[],
+    category: ICategory[]
 }
 
 export const getListProject = createAsyncThunk(
@@ -33,6 +26,18 @@ export const getListProject = createAsyncThunk(
     async () => {
         try {
             const resp = await axiosWithCyberToken.get('/api/Project/getAllProject')
+            return resp
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+export const getCategory = createAsyncThunk(
+    'projectSlice/getCategory',
+    async () => {
+        try {
+            const resp = await axiosWithCyberToken.get('/api/ProjectCategory')
             return resp
         } catch (error) {
             console.log(error)
@@ -62,7 +67,8 @@ const initialState: IInitSate = {
             alias: "",
             deleted: false
         }
-    ]
+    ],
+    category: []
 }
 
 
@@ -72,8 +78,11 @@ const projectSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (build) => {
-        build.addCase(getListProject.fulfilled,(state,action)=>{
+        build.addCase(getListProject.fulfilled, (state, action) => {
             state.listProject = action.payload?.data.content
+        }),
+        build.addCase(getCategory.fulfilled,(state,action)=>{
+            state.category = action.payload?.data.content
         })
     }
 }
