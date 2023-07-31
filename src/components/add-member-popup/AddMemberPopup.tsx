@@ -15,7 +15,8 @@ import { AppDispatch } from '../../redux/store'
 import { axiosWithAuth } from '../../services/services'
 //redux slice
 import {getListProject} from '../../redux/project-data/projectData'
-
+//swal
+import swal from 'sweetalert';
 
 interface IProps {
     memberListData: IGetMembers[],
@@ -33,13 +34,19 @@ function AddMemberPopup({ memberListData, idProject }: IProps) {
     }, [inputValue])
 
     const handleAddMember = async (idMember: number) => {
-        console.log(idProject, idMember)
-        const dataAssignToProject = {
-            projectId :idProject ,
-            userId: idMember
+        try{
+            console.log(idProject, idMember)
+            const dataAssignToProject = {
+                projectId :idProject ,
+                userId: idMember
+            }
+            await axiosWithAuth.post('/api/Project/assignUserProject', dataAssignToProject)
+            dispatch(getListProject())
+            swal("Đã thêm!", {icon: "success"})
+        }catch(error){
+            console.log(error)
+            swal("Bạn không phải người khởi tạo dự án này để thêm!", {icon: "error"})
         }
-        await axiosWithAuth.post('/api/Project/assignUserProject', dataAssignToProject)
-        dispatch(getListProject())
     }
 
     return (

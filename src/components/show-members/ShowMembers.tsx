@@ -16,7 +16,8 @@ import { AppDispatch, RootState } from '../../redux/store'
 //redux slice
 import { getListProject } from '../../redux/project-data/projectData'
 import { setReRender } from '../../redux/members-data/membersSlice'
-
+//swal
+import swal from 'sweetalert';
 
 
 interface IProps {
@@ -74,8 +75,10 @@ function ShowMembers({ members, idProjectForRemovingMem }: IProps) {
                         await axiosWithAuth.post('/api/Project/removeUserFromProject', dataRemovingMember)
                         dispatch(getListProject())
                         dispatch(setReRender(!isRender))
+                        swal("Đã xóa!", {icon: "success"})
                     } catch (error) {
                         console.log(error)
+                        swal("Bạn không phải người khởi tạo dự án này để xóa!", {icon: "error"})
                     }
                 }
                 return (
