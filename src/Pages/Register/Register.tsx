@@ -1,6 +1,5 @@
 //react
 import { NavLink, useNavigate } from 'react-router-dom';
-// import { useState } from 'react';
 //Mui ui
 import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -9,12 +8,12 @@ import '../Login/login.scss'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 //const
-import { regex, IValues, CYBER_TOKEN, BASE_URL } from '../../constant/constant'
+import { regex, IValues } from '../../constant/constant'
 //swal
 import swal from 'sweetalert';
 //services
-// import { axiosInterceptorWithCybertoken } from '../../services/services'
-import axios from 'axios';
+import { axiosWithCyberToken } from '../../services/services'
+
 
 
 function Register() {
@@ -34,14 +33,7 @@ function Register() {
     }),
     onSubmit: async (values: IValues) => {
       try {
-          await axios({
-            method:'post',
-            url:`${BASE_URL}/api/Users/signup`,
-            headers: {
-              TokenCybersoft: CYBER_TOKEN
-            },
-            data: values
-          })
+          await axiosWithCyberToken.post('/api/Users/signup', values)
           swal("Đã đăng ký thành công!", {icon: "success"})
           navigate('/auth/login')
         }

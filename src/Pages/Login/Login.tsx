@@ -5,24 +5,21 @@ import './login.scss'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 //const
-import { regex, IValuesLogin, CYBER_TOKEN, BASE_URL, ACCESS_TOKEN, IProfile } from '../../constant/constant'
+import { regex, IValuesLogin, ACCESS_TOKEN, IProfile } from '../../constant/constant'
 import Button from '@mui/material/Button';
 import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
 //utils
 // import { setLocal } from '../../utils/utils'
 //swal
 import swal from 'sweetalert';
-import axios from 'axios';
+//utils
 import { setLocal } from '../../utils';
+//redux
 import { setProfile } from '../../redux/profile-data/profileData';
-//services
-// import { axiosInterceptorWithCybertoken } from '../../services/services'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
-
-
-
-
+//services
+import { axiosWithCyberToken } from '../../services/services'
 
 
 function Login() {
@@ -39,16 +36,7 @@ function Login() {
     }),
     onSubmit: async (values: IValuesLogin) => {
       try {
-        // const resp = await axiosInterceptorWithCybertoken.post('/api/auth/signin',values)
-        console.log(values)
-        const resp = await axios({
-          method: 'post',
-          url: `${BASE_URL}/api/Users/signin`,
-          headers: {
-            TokenCybersoft: CYBER_TOKEN
-          },
-          data: values
-        })
+        const resp = await axiosWithCyberToken.post('/api/Users/signin',values)
         setLocal(ACCESS_TOKEN, resp.data.content.accessToken)
         swal("Đã đăng nhập thành công!", { icon: "success" })
         const { avatar, email, id, phoneNumber, name } = resp.data.content
