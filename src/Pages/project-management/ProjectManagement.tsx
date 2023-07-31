@@ -35,16 +35,20 @@ function ProjectManagement() {
     const [openAddMember, setAddMember] = React.useState(false);
     const [listMember, setListMember] = React.useState<IMembers[]>([])
     const [idProject, setIdProject] = React.useState<number>(-1)
-
+    const [idProjectForRemovingMem,setIdProjectForRemovingMem]= React.useState<number>(-1)
     const reducerListProduct = useSelector((state: RootState) => state.projectSlice.listProject)
     const memberListData = useSelector((state: RootState) => state.membersSlice.memberList)
-
+    const isRender = useSelector((state: RootState) => state.membersSlice.rerenderShowModal)
 
     useEffect(() => {
         dispatch(getListProject())
         dispatch(getCategory())
         dispatch(getMemberList(""))
     }, [])
+
+    useEffect(()=>{
+        setOpenMembers(false)
+    },[isRender])
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -86,10 +90,11 @@ function ProjectManagement() {
             align: 'left',
             width: 250,
             renderCell: (params) => {
-                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, listMember: IMembers[]) => {
+                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, listMember: IMembers[],idProj: number) => {
                     e.stopPropagation()
                     setOpenMembers(true)
                     setListMember(listMember)
+                    setIdProjectForRemovingMem(idProj)
                 }
                 const handleOpenAddmem = (e: React.MouseEvent, idProj: number) => {
                     e.stopPropagation()
@@ -101,21 +106,13 @@ function ProjectManagement() {
                         <div className="members-group">
                             {params.row.members.map((mem: IMembers, index: number) => {
                                 if (index <= 4) {
-                                    return (<Avatar key={mem.userId} sx={{ height: '3rem', width: '3rem' }} onMouseOver={(e) => { hanldeTooltip(e, params.row.members) }} src={mem.avatar}></Avatar>)
+                                    return (<Avatar key={mem.userId} sx={{ height: '3rem', width: '3rem' }} onMouseOver={(e) => { hanldeTooltip(e, params.row.members,params.row.id) }} src={mem.avatar}></Avatar>)
                                 }
                             })}
                         </div>
                         <div className='chip-onclick' onClick={(e) => { handleOpenAddmem(e, params.row.id) }}>
                             <Chip label="+" variant="outlined" sx={{ height: '2.5rem', marginLeft: '2px', fontSize: '1.4rem' }} />
                         </div>
-                        <Modal
-                            open={openMembers}
-                            onClose={() => { setOpenMembers(false) }}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <ShowMembers members={listMember} />
-                        </Modal>
                     </>
                 )
             }
@@ -215,6 +212,14 @@ function ProjectManagement() {
                         hideBackdrop={false}
                     >
                         <AddMemberPopup memberListData={memberListData} idProject={idProject} />
+                    </Modal>
+                    <Modal
+                        open={openMembers}
+                        onClose={() => { setOpenMembers(false) }}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <ShowMembers members={listMember} idProjectForRemovingMem={idProjectForRemovingMem}/>
                     </Modal>
                 </Box>
             </div>
