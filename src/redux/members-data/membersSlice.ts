@@ -4,13 +4,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { axiosWithAuth } from '../../services/services';
 //const 
 import { IGetMembers } from '../../constant/constant'
+import type { PayloadAction } from '@reduxjs/toolkit'
+
 
 interface IInitValue {
-    memberList: IGetMembers[]
+    memberList: IGetMembers[],
+    rerenderShowModal: boolean
 }
 
 const initValue :IInitValue = {
-    memberList : []
+    memberList : [],
+    rerenderShowModal: false
 }
 export const getMemberList = createAsyncThunk(
     'membersSlice/getMemberList',
@@ -27,7 +31,11 @@ export const getMemberList = createAsyncThunk(
 const membersSlice = createSlice({
     name:'membersSlice',
     initialState: initValue,
-    reducers: {},
+    reducers: {
+        setReRender: (state,action: PayloadAction<boolean>) =>{
+            state.rerenderShowModal = action.payload
+        }
+    },
     extraReducers: (build) => {
         build.addCase(getMemberList.fulfilled, (state,action)=>{
             state.memberList = action.payload?.data.content
@@ -36,6 +44,6 @@ const membersSlice = createSlice({
 })
 
 
-
+export const { setReRender} = membersSlice.actions
 
 export default membersSlice.reducer

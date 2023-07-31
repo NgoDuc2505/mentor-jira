@@ -7,10 +7,21 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 //const
-import {IMembers} from '../../constant/constant'
+import { IMembers } from '../../constant/constant'
+//services
+import { axiosWithAuth } from '../../services/services'
+import { useDispatch, useSelector } from 'react-redux';
+//store
+import { AppDispatch, RootState } from '../../redux/store'
+//redux slice
+import { getListProject } from '../../redux/project-data/projectData'
+import { setReRender } from '../../redux/members-data/membersSlice'
+
+
 
 interface IProps {
-    members: IMembers[]
+    members: IMembers[],
+    idProjectForRemovingMem: number
 }
 
 interface IMembersList {
@@ -19,11 +30,13 @@ interface IMembersList {
     avatar: string
 }
 
-function ShowMembers({members}:IProps) {
-    const memberList:IMembersList[] = []
-    members.map((member)=>{
-        const {userId, avatar, name} = member
-        const memChange = {id : userId, avatar, name}
+function ShowMembers({ members, idProjectForRemovingMem }: IProps) {
+    const isRender = useSelector((state: RootState)=> state.membersSlice.rerenderShowModal)
+    const dispatch = useDispatch<AppDispatch>()
+    const memberList: IMembersList[] = []
+    members.map((member) => {
+        const { userId, avatar, name } = member
+        const memChange = { id: userId, avatar, name }
         memberList.push(memChange)
     })
     const columns: GridColDef[] = [
@@ -34,9 +47,8 @@ function ShowMembers({members}:IProps) {
             width: 60,
             headerAlign: 'left',
             align: 'left',
-            renderCell: (params)=>{
-                console.log(params)
-                return <Avatar sx={{width:'30px', height:'30px'}}>h</Avatar>
+            renderCell: (params) => {
+                return <Avatar sx={{ width: '30px', height: '30px' }} src={params.row.avatar}></Avatar>
             }
         },
         {
@@ -51,26 +63,38 @@ function ShowMembers({members}:IProps) {
             headerName: 'action',
             headerAlign: 'left',
             align: 'left',
-            width:60 ,
+            width: 60,
             renderCell: (params) => {
-                console.log(params.row)
+                const handleRemoveUser = async (id: number) => {
+                    try {
+                        const dataRemovingMember = {
+                            projectId: idProjectForRemovingMem,
+                            userId: id
+                        }
+                        await axiosWithAuth.post('/api/Project/removeUserFromProject', dataRemovingMember)
+                        dispatch(getListProject())
+                        dispatch(setReRender(!isRender))
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
                 return (
-                    <Button variant='contained' color='error' sx={{width:'2rem', minWidth:'unset'}}>X</Button>
+                    <Button variant='contained' color='error' sx={{ width: '2rem', minWidth: 'unset' }} onClick={() => { handleRemoveUser(params.row.id) }}>X</Button>
                 )
             }
         }
     ];
 
     const rows = [
-        { id: 1, avatar: 'Snow', name: 'Jon'},
-        { id: 2, avatar: 'Lannister', name: 'Cersei'},
-        { id: 3, avatar: 'Lannister', name: 'Jaime'},
-        { id: 4, avatar: 'Stark', name: 'Arya'},
-        { id: 5, avatar: 'Targaryen', name: 'Daenerys'},
+        { id: 1, avatar: 'Snow', name: 'Jon' },
+        { id: 2, avatar: 'Lannister', name: 'Cersei' },
+        { id: 3, avatar: 'Lannister', name: 'Jaime' },
+        { id: 4, avatar: 'Stark', name: 'Arya' },
+        { id: 5, avatar: 'Targaryen', name: 'Daenerys' },
         { id: 6, avatar: 'Melisandre', name: null },
-        { id: 7, avatar: 'Clifford', name: 'Ferrara'},
-        { id: 8, avatar: 'Frances', name: 'Rossini'},
-        { id: 9, avatar: 'Roxie', name: 'Harvey'},
+        { id: 7, avatar: 'Clifford', name: 'Ferrara' },
+        { id: 8, avatar: 'Frances', name: 'Rossini' },
+        { id: 9, avatar: 'Roxie', name: 'Harvey' },
     ];
     const dataResp = members ? memberList : rows
     return (
@@ -80,7 +104,7 @@ function ShowMembers({members}:IProps) {
                     rows={dataResp}
                     columns={columns}
                     disableRowSelectionOnClick
-                    hideFooter = {true}
+                    hideFooter={true}
                 />
             </Box>
         </div>

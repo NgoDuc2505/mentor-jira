@@ -1,5 +1,4 @@
 //mui ui
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 //scss
 import './addMemberPopup.scss'
@@ -54,7 +53,6 @@ function AddMemberPopup({ memberListData, idProject }: IProps) {
                         return (<p onClick={() => { handleAddMember(item.userId) }}>{item.name}</p>)
                     })}
                 </div>
-                <Button variant='contained'>+</Button>
             </div>
         </div>
     )
