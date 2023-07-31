@@ -24,7 +24,11 @@
             p{
                 font-size: 1.4rem;
                 font-weight: 500;
-                line-height: 2rem;
+                line-height: 3rem;
+                background-color: #fff;
+                &:hover{
+                    background-color: rgba(128, 128, 128, 0.5);
+                }
             }
         }
         button{

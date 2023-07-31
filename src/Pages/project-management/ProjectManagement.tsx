@@ -17,6 +17,7 @@ import AddMemberPopup from '../../components/add-member-popup/AddMemberPopup';
 import { useNavigate } from 'react-router-dom';
 //services
 import { getListProject, getCategory } from '../../redux/project-data/projectData';
+import { getMemberList } from '../../redux/members-data/membersSlice'
 //react
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -32,11 +33,17 @@ function ProjectManagement() {
     const handleClose = () => setOpenEditModal(false);
     const [openMembers, setOpenMembers] = React.useState(false);
     const [openAddMember, setAddMember] = React.useState(false);
-    const [listMember,setListMember] = React.useState<IMembers[]>([])
+    const [listMember, setListMember] = React.useState<IMembers[]>([])
+    const [idProject, setIdProject] = React.useState<number>(-1)
+
     const reducerListProduct = useSelector((state: RootState) => state.projectSlice.listProject)
+    const memberListData = useSelector((state: RootState) => state.membersSlice.memberList)
+
+
     useEffect(() => {
         dispatch(getListProject())
         dispatch(getCategory())
+        dispatch(getMemberList(""))
     }, [])
 
     const columns: GridColDef[] = [
@@ -48,9 +55,9 @@ function ProjectManagement() {
             align: 'left',
             headerAlign: 'left',
             renderCell: (params) => {
-                return <Typography variant="h5" sx={{ color: '#0288d1' }}>
+                return (<Typography variant="h5" sx={{ color: '#0288d1' }}>
                     {params.row.projectName}
-                </Typography>
+                </Typography>)
             }
 
         },
@@ -79,25 +86,26 @@ function ProjectManagement() {
             align: 'left',
             width: 250,
             renderCell: (params) => {
-                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>,listMember: IMembers[]) => {
+                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, listMember: IMembers[]) => {
                     e.stopPropagation()
                     setOpenMembers(true)
                     setListMember(listMember)
                 }
-                const handleOpenAddmem = (e: React.MouseEvent) => {
+                const handleOpenAddmem = (e: React.MouseEvent, idProj: number) => {
                     e.stopPropagation()
                     setAddMember(true)
+                    setIdProject(idProj)
                 }
                 return (
                     <>
                         <div className="members-group">
                             {params.row.members.map((mem: IMembers, index: number) => {
                                 if (index <= 4) {
-                                    return (<Avatar key={mem.userId} sx={{ height: '3rem', width: '3rem' }} onMouseOver={(e)=>{hanldeTooltip(e,params.row.members)}} src={mem.avatar}></Avatar>)
+                                    return (<Avatar key={mem.userId} sx={{ height: '3rem', width: '3rem' }} onMouseOver={(e) => { hanldeTooltip(e, params.row.members) }} src={mem.avatar}></Avatar>)
                                 }
                             })}
                         </div>
-                        <div className='chip-onclick' onClick={handleOpenAddmem}>
+                        <div className='chip-onclick' onClick={(e) => { handleOpenAddmem(e, params.row.id) }}>
                             <Chip label="+" variant="outlined" sx={{ height: '2.5rem', marginLeft: '2px', fontSize: '1.4rem' }} />
                         </div>
                         <Modal
@@ -206,7 +214,7 @@ function ProjectManagement() {
                         aria-describedby="modal-modal-description"
                         hideBackdrop={false}
                     >
-                        <AddMemberPopup />
+                        <AddMemberPopup memberListData={memberListData} idProject={idProject} />
                     </Modal>
                 </Box>
             </div>
