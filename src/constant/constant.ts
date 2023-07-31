@@ -24,3 +24,9 @@ export interface IProfile {
     name: string,
     phoneNumber: string
 }
+
+export interface IMembers {
+    userId: number,
+    name: string,
+    avatar: string
+}
