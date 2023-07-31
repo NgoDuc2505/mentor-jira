@@ -40,3 +40,8 @@ export interface ICreator {
     id: number,
     name: string,
 }
+
+export interface IGetMembers extends IMembers{
+    email: string,
+    phoneNumber: string
+}
