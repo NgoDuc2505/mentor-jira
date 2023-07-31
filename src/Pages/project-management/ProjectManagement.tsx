@@ -15,8 +15,8 @@ import ShowMembers from '../../components/show-members/ShowMembers';
 import AddMemberPopup from '../../components/add-member-popup/AddMemberPopup';
 //react
 import { useNavigate } from 'react-router-dom';
-//services
-import { getListProject, getCategory } from '../../redux/project-data/projectData';
+//redux slice
+import { getListProject, getCategory, getProjectById } from '../../redux/project-data/projectData';
 import { getMemberList } from '../../redux/members-data/membersSlice'
 //react
 import React, { useEffect } from 'react';
@@ -35,6 +35,7 @@ function ProjectManagement() {
     const [openAddMember, setAddMember] = React.useState(false);
     const [listMember, setListMember] = React.useState<IMembers[]>([])
     const [idProject, setIdProject] = React.useState<number>(-1)
+    const [creatorId,setCreatorId] = React.useState<number>(-1)
     const [idProjectForRemovingMem,setIdProjectForRemovingMem]= React.useState<number>(-1)
     const reducerListProduct = useSelector((state: RootState) => state.projectSlice.listProject)
     const memberListData = useSelector((state: RootState) => state.membersSlice.memberList)
@@ -126,10 +127,11 @@ function ProjectManagement() {
             width: 150,
             sortable: false,
             renderCell: (params) => {
-                const handleEdit = (e: React.MouseEvent) => {
+                const handleEdit = (e: React.MouseEvent,idProj: number) => {
                     e.stopPropagation()
-                    console.log(params)
                     handleOpen()
+                    dispatch(getProjectById(idProj))
+                    setCreatorId(params.row.creator.id)
                 }
                 const handleDelete = (e: React.MouseEvent) => {
                     e.stopPropagation()
@@ -142,7 +144,7 @@ function ProjectManagement() {
                 }
                 return (
                     <div className="btn-group-table">
-                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='primary' onClick={handleEdit}><i className="fa-solid fa-pen-to-square"></i></Button>
+                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='primary' onClick={(e)=>{handleEdit(e, params.row.id)}}><i className="fa-solid fa-pen-to-square"></i></Button>
                         <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='info' onClick={handleNavigateToDetail}><i className="fa-solid fa-eye"></i></Button>
                         <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='error' onClick={handleDelete}><i className="fa-solid fa-trash"></i></Button>
                     </div>
@@ -202,7 +204,7 @@ function ProjectManagement() {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <EditProjectModal />
+                        <EditProjectModal creatorId={creatorId}/>
                     </Modal>
                     <Modal
                         open={openAddMember}

@@ -45,3 +45,10 @@ export interface IGetMembers extends IMembers{
     email: string,
     phoneNumber: string
 }
+
+export interface IListTask {
+    lstTaskDeTail: [],
+    statusId: string,
+    statusName: string,
+    alias: string
+}
