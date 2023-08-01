@@ -13,6 +13,7 @@ import Avatar from '@mui/material/Avatar';
 //scss
 import './editTask.scss'
 
+
 function EditTask() {
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -49,6 +50,7 @@ function EditTask() {
   ]
   const [personName, setPersonName] = React.useState<string[]>([]);
   const [default1, setDefault1] = React.useState(true)
+  
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
     setDefault1(false)
     const {

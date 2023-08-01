@@ -5,14 +5,23 @@ import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 //react
 import {NavLink} from 'react-router-dom'
+import { useSelector } from 'react-redux';
+//redux store
+import { RootState } from '../../redux/store'
+//const
+import { IGetMembers } from '../../constant/constant'
+
+
 
 function SideBarSub() {
+    const profileByListData: IGetMembers | undefined = useSelector((state: RootState) => state.profile.dataProfileByList)
+
     return (
         <div className='side-bar-sub'>
             <div className="avatar-bar-sub">
-                <Avatar className='mui-ava' alt="Travis Howard" src="https://tse2.mm.bing.net/th?id=OIP.sHlaxfIHndDgtkr35zWJqgHaEo&pid=Api&P=0&h=180" />
+                <Avatar className='mui-ava' alt="Travis Howard" src={profileByListData?.avatar} />
                 <div className="info-ava-bar">
-                    <p>Cyber Learn</p>
+                    <p>{profileByListData?.name}</p>
                     <Button variant='text'>Report Bugs</Button>
                 </div>
             </div>
