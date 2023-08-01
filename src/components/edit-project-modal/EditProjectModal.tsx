@@ -24,7 +24,7 @@ import { getLocal } from '../../utils/index'
 import swal from 'sweetalert';
 //redux slice
 import {getListProject} from '../../redux/project-data/projectData'
-
+import {setReRender} from '../../redux/members-data/membersSlice'
 
 interface IProps {
     creatorId: number
@@ -33,6 +33,7 @@ interface IProps {
 function EditProjectModal({creatorId}:IProps) {
     const dispatch = useDispatch<AppDispatch>()
     const { id, projectName, description, projectCategory } = useSelector((state: RootState) => state.projectSlice.currentProject)
+    const isRender = useSelector((state:RootState)=> state.membersSlice.rerenderShowModal)
     const [categoryID, setCategoryId] = useState<number>(0)
 
     const handleGetCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -70,6 +71,7 @@ function EditProjectModal({creatorId}:IProps) {
                 })
                 dispatch(getListProject())
                 swal("Thành công!", {icon: "success"})
+                dispatch(setReRender(!isRender))
             } catch (error) {
                 console.log(error)
                 swal("Bạn không phải người khởi tạo dự án này để có thể chỉnh sửa!", {icon: "error"})
@@ -119,7 +121,7 @@ function EditProjectModal({creatorId}:IProps) {
                 />
             </div>
             <div className="btn-edit-project-group">
-                <Button variant='contained' color='error'>Cancel</Button>
+                <Button variant='contained' color='error' onClick={()=>{dispatch(setReRender(!isRender))}}>Cancel</Button>
                 <Button variant='contained' color='primary' type='submit'>Submit</Button>
             </div>
         </form>
