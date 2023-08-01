@@ -49,6 +49,7 @@ function ProjectManagement() {
 
     useEffect(()=>{
         setOpenMembers(false)
+        setOpenEditModal(false)
     },[isRender])
 
     const columns: GridColDef[] = [
