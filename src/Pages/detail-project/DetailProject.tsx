@@ -4,26 +4,42 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 //react
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 //scss
 import './detailProject.scss'
 //components
 import CreateTask from '../../components/create-task/CreateTask';
 import EditTask from '../../components/edit-task/EditTask';
+//custom hook
+import useGetAPITask, { useGetAPIDetail, useGetDataDependOnParams } from './detailProject.handle'
+//const
+import {  IListTaskDetail } from '../../constant/constant'
 
 
 function DetailProject() {
+  const idNum = useParams()
+  const idNumCustom = Number(idNum.detailID)
+  useGetAPITask(idNumCustom)
+  const {currentProject,profile,isRender} = useGetAPIDetail()
+  useGetDataDependOnParams(idNum.detailID,idNumCustom)
+
+  useEffect(() => {
+    setOpenModal(false)
+  }, [isRender])
+
   const [openModal, setOpenModal] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
   const handleOpenEditTask = () => {
     setOpenEdit(true)
   }
+
   return (
     <div className="detail-project">
       <div className="header-detail-project">
-        <Typography variant='h5'>Project / Cyber Learn / Project Management / Project 123</Typography>
-        <Typography variant='h3'>Project 123</Typography>
-        <Typography variant='h6' sx={{ marginTop: '1rem' }}>Ngo duc</Typography>
+        <Typography variant='h5'>{`Project / ${profile?.name} / Project Management / ${currentProject.projectName}`}</Typography>
+        <Typography variant='h3' sx={{ marginTop: '2rem' }}>{currentProject.projectName}</Typography>
+        <Typography variant='h6' sx={{ marginTop: '1rem' }}>{profile?.name}</Typography>
       </div>
       <div className="status-detail-project">
         <div className="search-task">
@@ -31,298 +47,49 @@ function DetailProject() {
           <input type="text" />
         </div>
         <div className="group-ava-detail">
-          <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-          <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
+          {currentProject.members.map((item) => {
+            return (<Avatar key={item.userId} sx={{ width: '3rem', height: '3rem' }} src={item.avatar}></Avatar>)
+          })}
         </div>
         <Typography variant='h6'>Only my issue</Typography>
         <Typography variant='h6'>Recently uploaded</Typography>
         <Button variant='contained' color='info' onClick={() => { setOpenModal(true) }}>New Task</Button>
       </div>
+
       <div className="task-tracking">
-        <div className="track-item">
-          <Typography variant='h6' sx={{ marginLeft: '1rem' }}>BACKLOG</Typography>
-          <div className="track-task-list">
-            <div className="task-item-detail" onClick={handleOpenEditTask}>
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
 
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
+        {/*-------------------------------render 4 types of task-------------------------------------*/}
 
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
+        {currentProject.lstTask.map((item) => {
+          return (
+            <div className="track-item" key={item.statusId}>
+              <Typography variant='h6' sx={{ marginLeft: '1rem' }}>{item.statusName}</Typography>
+              <div className="track-task-list">
 
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
+                {/*-------------------------------render each tasks of task' s type-------------------------------------*/}
 
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
+                {item.lstTaskDeTail.map((tasks: IListTaskDetail) => {
+                  return (
+                    <div className="task-item-detail" onClick={handleOpenEditTask} key={tasks.taskId}>
+                      <Typography variant='h6'>{tasks.taskName}</Typography>
+                      <div className="task-status">
+                        <Typography variant='h6' color={'red'}>{tasks.priorityTask.priority}</Typography>
+                        <div className="task-members">
 
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="track-item">
-          <Typography variant='h6' sx={{ marginLeft: '1rem' }}>FOR DEVEPOMENT</Typography>
-          <div className="track-task-list">
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
+                          {/*-------------------------------render each each members that is in task-------------------------------------*/}
 
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
+                          {tasks.assigness.map((members) => {
+                            return (<Avatar key={members.id} sx={{ width: '3rem', height: '3rem' }} src={members.avatar}></Avatar>)
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="track-item">
-          <Typography variant='h6' sx={{ marginLeft: '1rem' }}>IN PROGRESS</Typography>
-          <div className="track-task-list">
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="track-item">
-          <Typography variant='h6' sx={{ marginLeft: '1rem' }}>DONE</Typography>
-          <div className="track-task-list">
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-
-            <div className="task-item-detail">
-              <Typography variant='h6'>Task 01</Typography>
-              <div className="task-status">
-                <Typography variant='h6' color={'red'}>High</Typography>
-                <div className="task-members">
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>H</Avatar>
-                  <Avatar sx={{ width: '3rem', height: '3rem' }}>t</Avatar>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          )
+        })}
       </div>
       <Modal
         open={openModal}
@@ -330,14 +97,14 @@ function DetailProject() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <CreateTask />
+        <CreateTask idNumCustom={idNumCustom} />
       </Modal>
       <Modal
         open={openEdit}
         onClose={() => { setOpenEdit(false) }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-          <EditTask/>
+        <EditTask />
       </Modal>
     </div>
   )

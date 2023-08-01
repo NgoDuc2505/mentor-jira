@@ -18,12 +18,16 @@ import { useNavigate } from 'react-router-dom';
 //redux slice
 import { getListProject, getCategory, getProjectById } from '../../redux/project-data/projectData';
 import { getMemberList } from '../../redux/members-data/membersSlice'
+import { getListUser } from '../../redux/profile-data/profileData'
 //react
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store'
 //const
-import { IMembers } from '../../constant/constant'
+import { IMembers, ACCESS_USER_ID } from '../../constant/constant'
+//util
+import { getLocal } from '../../utils/index'
+
 
 function ProjectManagement() {
     const dispatch = useDispatch<AppDispatch>()
@@ -45,6 +49,7 @@ function ProjectManagement() {
         dispatch(getListProject())
         dispatch(getCategory())
         dispatch(getMemberList(""))
+        dispatch(getListUser(getLocal(ACCESS_USER_ID)))
     }, [])
 
     useEffect(()=>{
@@ -138,15 +143,14 @@ function ProjectManagement() {
                     e.stopPropagation()
                     // console.log(params)
                 }
-                const handleNavigateToDetail = (e: React.MouseEvent) => {
+                const handleNavigateToDetail = (e: React.MouseEvent,idProj: number) => {
                     e.stopPropagation()
-                    // console.log(params)
-                    navigate(`/detail-project/4`)
+                    navigate(`/detail-project/${idProj}`)
                 }
                 return (
                     <div className="btn-group-table">
                         <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='primary' onClick={(e)=>{handleEdit(e, params.row.id)}}><i className="fa-solid fa-pen-to-square"></i></Button>
-                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='info' onClick={handleNavigateToDetail}><i className="fa-solid fa-eye"></i></Button>
+                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='info' onClick={(e)=>{handleNavigateToDetail(e,params.row.id)}}><i className="fa-solid fa-eye"></i></Button>
                         <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='error' onClick={handleDelete}><i className="fa-solid fa-trash"></i></Button>
                     </div>
                 )

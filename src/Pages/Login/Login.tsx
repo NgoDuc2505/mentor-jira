@@ -5,7 +5,7 @@ import './login.scss'
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 //const
-import { regex, IValuesLogin, ACCESS_TOKEN, IProfile } from '../../constant/constant'
+import { regex, IValuesLogin, ACCESS_TOKEN, IProfile, ACCESS_USER_ID } from '../../constant/constant'
 import Button from '@mui/material/Button';
 import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
 //swal
@@ -36,6 +36,7 @@ function Login() {
       try {
         const resp = await axiosWithCyberToken.post('/api/Users/signin',values)
         setLocal(ACCESS_TOKEN, resp.data.content.accessToken)
+        setLocal(ACCESS_USER_ID,resp.data.content.id)
         swal("Đã đăng nhập thành công!", { icon: "success" })
         const { avatar, email, id, phoneNumber, name } = resp.data.content
         const profileDataResp :IProfile = { avatar, email, id, phoneNumber, name }
