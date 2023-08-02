@@ -13,9 +13,9 @@ import Avatar from '@mui/material/Avatar';
 import './editTask.scss'
 //const
 import { IListTaskDetail, MenuProps, IGetMembers } from '../../constant/constant'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 //redux store
-import { RootState, AppDispatch } from '../../redux/store'
+import { AppDispatch } from '../../redux/store'
 //formik 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -29,7 +29,8 @@ import { axiosWithAuth } from '../../services/services'
 //redux slice
 import {setReRender} from '../../redux/members-data/membersSlice'
 import { getProjectById } from '../../redux/project-data/projectData'
-
+//handler
+import {useAsignData, useSelectorData} from './editTaskHandle'
 
 interface IProps {
   curentTask: IListTaskDetail
@@ -37,18 +38,9 @@ interface IProps {
 
 function EditTask({ curentTask }: IProps) {
   const dispatch = useDispatch<AppDispatch>()
-
   
-  const assignListName = curentTask.assigness.map((item) => { return item.name })
-  const assignListId = curentTask.assigness.map((item) => { return item.id })
-  const assignListAvatar = curentTask.assigness.map((item) => { return item.avatar })
-  
-  
-  const isRender = useSelector((state:RootState)=> state.membersSlice.rerenderShowModal)
-  const listOfPriority = useSelector((state: RootState) => state.taskSlice.priorityList)
-  const listOfTasktype = useSelector((state: RootState) => state.taskSlice.taskTypeList)
-  const statusListOfType = useSelector((state: RootState) => state.taskSlice.statusList)
-  const memberList = useSelector((state: RootState) => state.projectSlice.currentProject.members)
+  const {assignListName, assignListId, assignListAvatar} = useAsignData(curentTask)
+  const {isRender,listOfPriority,listOfTasktype,statusListOfType,memberList} = useSelectorData()
 
   const [idMemAdd, setIdMemAdd] = React.useState<number[]>(assignListId)
   const [avatarList, setAvatarList] = React.useState<string[]>(assignListAvatar)
