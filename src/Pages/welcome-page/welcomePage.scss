@@ -1,0 +1,36 @@
+.welcome-page{
+    width: 100%;
+    background-color: rgb(250, 251, 252);
+    background-image: url(https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.464/static/media/default_left.e74de3ec.svg), url(https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.464/static/media/default_right.6ece9751.svg);
+    background-repeat: no-repeat, no-repeat;
+    background-attachment: fixed, fixed;
+    background-size: 368px, 368px;
+    background-position: left bottom, right bottom;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .welcome-page-content{
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px;
+        height: 30%;
+        width: 30rem;
+        border-radius: 5px;
+        text-align: center;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: #fff;
+        a{
+            font-size: 1.8rem;
+            display: block;
+            background-color: #0052cc;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        h1{
+            color: #0052cc;
+        }
+    }
+}

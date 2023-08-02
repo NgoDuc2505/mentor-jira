@@ -62,7 +62,7 @@ function Login() {
         </FormControl>
         <FormControl variant='standard' className='mui-form-control' margin='dense' error={formik.errors.passWord ? true : false}>
           <InputLabel htmlFor="my-input-password">Mật khẩu</InputLabel>
-          <Input id="my-input-password" aria-describedby="my-helper-text" {...formik.getFieldProps('passWord')} />
+          <Input id="my-input-password" aria-describedby="my-helper-text" type={'password'} {...formik.getFieldProps('passWord')} />
           {formik.touched.passWord && formik.errors.passWord ? <FormHelperText id="my-helper-text">{formik.errors.passWord}</FormHelperText> : <></>}
         </FormControl>
         <div className="form-button-group">
