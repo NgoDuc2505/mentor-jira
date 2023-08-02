@@ -27,6 +27,10 @@ import { AppDispatch, RootState } from '../../redux/store'
 import { IMembers, ACCESS_USER_ID } from '../../constant/constant'
 //util
 import { getLocal } from '../../utils/index'
+//services
+import { axiosWithAuth } from '../../services/services'
+//swal
+import swal from 'sweetalert';
 
 
 function ProjectManagement() {
@@ -39,8 +43,8 @@ function ProjectManagement() {
     const [openAddMember, setAddMember] = React.useState(false);
     const [listMember, setListMember] = React.useState<IMembers[]>([])
     const [idProject, setIdProject] = React.useState<number>(-1)
-    const [creatorId,setCreatorId] = React.useState<number>(-1)
-    const [idProjectForRemovingMem,setIdProjectForRemovingMem]= React.useState<number>(-1)
+    const [creatorId, setCreatorId] = React.useState<number>(-1)
+    const [idProjectForRemovingMem, setIdProjectForRemovingMem] = React.useState<number>(-1)
     const reducerListProduct = useSelector((state: RootState) => state.projectSlice.listProject)
     const memberListData = useSelector((state: RootState) => state.membersSlice.memberList)
     const isRender = useSelector((state: RootState) => state.membersSlice.rerenderShowModal)
@@ -52,10 +56,10 @@ function ProjectManagement() {
         dispatch(getListUser(getLocal(ACCESS_USER_ID)))
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         setOpenMembers(false)
         setOpenEditModal(false)
-    },[isRender])
+    }, [isRender])
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -97,7 +101,7 @@ function ProjectManagement() {
             align: 'left',
             width: 250,
             renderCell: (params) => {
-                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, listMember: IMembers[],idProj: number) => {
+                const hanldeTooltip = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, listMember: IMembers[], idProj: number) => {
                     e.stopPropagation()
                     setOpenMembers(true)
                     setListMember(listMember)
@@ -113,7 +117,7 @@ function ProjectManagement() {
                         <div className="members-group">
                             {params.row.members.map((mem: IMembers, index: number) => {
                                 if (index <= 4) {
-                                    return (<Avatar key={mem.userId} sx={{ height: '3rem', width: '3rem' }} onMouseOver={(e) => { hanldeTooltip(e, params.row.members,params.row.id) }} src={mem.avatar}></Avatar>)
+                                    return (<Avatar key={mem.userId} sx={{ height: '3rem', width: '3rem' }} onMouseOver={(e) => { hanldeTooltip(e, params.row.members, params.row.id) }} src={mem.avatar}></Avatar>)
                                 }
                             })}
                         </div>
@@ -133,24 +137,32 @@ function ProjectManagement() {
             width: 150,
             sortable: false,
             renderCell: (params) => {
-                const handleEdit = (e: React.MouseEvent,idProj: number) => {
+                const handleEdit = (e: React.MouseEvent, idProj: number) => {
                     e.stopPropagation()
                     handleOpen()
                     dispatch(getProjectById(idProj))
                     setCreatorId(params.row.creator.id)
                 }
-                const handleDelete = (e: React.MouseEvent) => {
-                    e.stopPropagation()
+                const handleDelete = async (e: React.MouseEvent, idProj: number) => {
+                    try{
+                        e.stopPropagation()
+                        await axiosWithAuth.delete(`/api/Project/deleteProject?projectId=${idProj}`)
+                        dispatch(getListProject())
+                        swal("Đã xóa!", { icon: "success" })
+                    }catch(error){
+                        console.log(error)
+                        swal("Bạn không phải người khởi tạo dự án này!", { icon: "error" })
+                    }
                 }
-                const handleNavigateToDetail = (e: React.MouseEvent,idProj: number) => {
+                const handleNavigateToDetail = (e: React.MouseEvent, idProj: number) => {
                     e.stopPropagation()
                     navigate(`/detail-project/${idProj}`)
                 }
                 return (
                     <div className="btn-group-table">
-                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='primary' onClick={(e)=>{handleEdit(e, params.row.id)}}><i className="fa-solid fa-pen-to-square"></i></Button>
-                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='info' onClick={(e)=>{handleNavigateToDetail(e,params.row.id)}}><i className="fa-solid fa-eye"></i></Button>
-                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='error' onClick={handleDelete}><i className="fa-solid fa-trash"></i></Button>
+                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='primary' onClick={(e) => { handleEdit(e, params.row.id) }}><i className="fa-solid fa-pen-to-square"></i></Button>
+                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='info' onClick={(e) => { handleNavigateToDetail(e, params.row.id) }}><i className="fa-solid fa-eye"></i></Button>
+                        <Button sx={{ minWidth: '4rem', marginRight: '5px' }} variant='contained' color='error' onClick={(e) => { handleDelete(e, params.row.id) }}><i className="fa-solid fa-trash"></i></Button>
                     </div>
                 )
             }
@@ -225,7 +237,7 @@ function ProjectManagement() {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <ShowMembers members={listMember} idProjectForRemovingMem={idProjectForRemovingMem}/>
+                        <ShowMembers members={listMember} idProjectForRemovingMem={idProjectForRemovingMem} />
                     </Modal>
                 </Box>
             </div>
