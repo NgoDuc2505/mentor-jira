@@ -9,6 +9,7 @@
     transform:  translate(-50%,-50%);
     display: flex;
     gap: 3rem;
+    overflow-y: auto;
     .mui-select-custom-edit-task{
         height: 3rem;
         margin: 0;
@@ -106,8 +107,8 @@
             .edit-task-right-time-tracking-input{
                 display: flex;
                 justify-content: space-between;
-                input{
-                    width: 20%;
+                .time-status{
+                    width: 30%;
                 }
             }
             .edit-task-right-footer{
@@ -129,5 +130,17 @@
                 }
             }
         }
+        .button-group-edit-task{
+            display: flex;
+            justify-content: flex-end;
+            gap: 2rem;
+        }
+    }
+    .priority-task-edit{
+        width: 100%;
+        height: 3rem;
+    }
+    .task-type-list{
+        width: 10rem;
     }
 }

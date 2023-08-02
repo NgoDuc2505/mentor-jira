@@ -141,7 +141,6 @@ function ProjectManagement() {
                 }
                 const handleDelete = (e: React.MouseEvent) => {
                     e.stopPropagation()
-                    // console.log(params)
                 }
                 const handleNavigateToDetail = (e: React.MouseEvent,idProj: number) => {
                     e.stopPropagation()
@@ -209,7 +208,7 @@ function ProjectManagement() {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <EditProjectModal creatorId={creatorId}/>
+                        <EditProjectModal creatorId={creatorId} />
                     </Modal>
                     <Modal
                         open={openAddMember}

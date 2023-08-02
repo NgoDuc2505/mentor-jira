@@ -14,24 +14,28 @@ import EditTask from '../../components/edit-task/EditTask';
 //custom hook
 import useGetAPITask, { useGetAPIDetail, useGetDataDependOnParams } from './detailProject.handle'
 //const
-import {  IListTaskDetail } from '../../constant/constant'
+import { IListTaskDetail, initTaskDetail } from '../../constant/constant'
 
 
 function DetailProject() {
   const idNum = useParams()
   const idNumCustom = Number(idNum.detailID)
   useGetAPITask(idNumCustom)
-  const {currentProject,profile,isRender} = useGetAPIDetail()
-  useGetDataDependOnParams(idNum.detailID,idNumCustom)
+  const { currentProject, profile, isRender } = useGetAPIDetail()
+  useGetDataDependOnParams(idNum.detailID, idNumCustom)
 
   useEffect(() => {
     setOpenModal(false)
+    setOpenEdit(false)
   }, [isRender])
 
   const [openModal, setOpenModal] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
-  const handleOpenEditTask = () => {
+  const [curentTask, setCurentTask] = React.useState<IListTaskDetail>(initTaskDetail)
+
+  const handleOpenEditTask = (task: IListTaskDetail) => {
     setOpenEdit(true)
+    setCurentTask(task)
   }
 
   return (
@@ -70,7 +74,7 @@ function DetailProject() {
 
                 {item.lstTaskDeTail.map((tasks: IListTaskDetail) => {
                   return (
-                    <div className="task-item-detail" onClick={handleOpenEditTask} key={tasks.taskId}>
+                    <div className="task-item-detail" onClick={()=>{handleOpenEditTask(tasks)}} key={tasks.taskId}>
                       <Typography variant='h6'>{tasks.taskName}</Typography>
                       <div className="task-status">
                         <Typography variant='h6' color={'red'}>{tasks.priorityTask.priority}</Typography>
@@ -104,7 +108,7 @@ function DetailProject() {
         onClose={() => { setOpenEdit(false) }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-        <EditTask />
+        <EditTask curentTask={curentTask}/>
       </Modal>
     </div>
   )

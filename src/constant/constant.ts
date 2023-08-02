@@ -98,6 +98,30 @@ export interface IListTaskDetail {
     typeId: number,
 }
 
+export const initTaskDetail: IListTaskDetail = {
+    alias: "",
+    assigness: [{
+        alias: "",
+        avatar: "",
+        id: 0,
+        name: "",
+    }],
+    description: "",
+    lstComment: [],
+    originalEstimate: 0,
+    priorityId: 0,
+    priorityTask: { priorityId: 0, priority: "" },
+    projectId: 0,
+    statusId: "",
+    taskId: 0,
+    taskName: "",
+    taskTypeDetail: { id: 0, taskType: "" },
+    timeTrackingRemaining: 0,
+    timeTrackingSpen: 0,
+    typeId: 0
+
+}
+
 export interface IListTask {
     alias: string,
     lstTaskDeTail: [],

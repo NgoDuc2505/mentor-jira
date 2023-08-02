@@ -141,7 +141,7 @@ function CreateTask({ idNumCustom }: IProps) {
                 swal("Đã tạo thành công!", { icon: "success" })
             } catch (error) {
                 console.log(error)
-                swal("Vui lòng kiểm tra lại thông tin!", {
+                swal("Vui lòng kiểm tra lại thông tin hoặc thử đặt tên khác!", {
                     icon: "error",
                 });
             }
